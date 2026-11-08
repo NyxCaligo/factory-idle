@@ -498,7 +498,7 @@
 
 <section id="menu" class="screen on">
   <div class="logo">生产与建造</div>
-  <div class="sub">v1.0.0</div>
+  <div class="sub">v1.0.1</div>
   <div class="menuBtns">
     <button class="btn primary" id="btnNew">开始新游戏</button>
     <button class="btn" id="btnContinue" style="display:none">继续游戏</button>
@@ -1717,17 +1717,23 @@ document.querySelectorAll('[data-close]').forEach(el=>{
 });
 
 /* ===================== 兑换码 ===================== */
-const CODES={
-  'NYX-9F4Q-2M7K-8T3Z-6P1W':'dev',   // 开发者模式（勿外传）
-  'GX-2026-1126-3393-0255':'dev',    // 备用码
-};
+/* 兑换码不存明文，只存校验值（防止直接翻源码抄走） */
+function codeHash(str){
+  const s=(str||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h >>> 0;
+}
+const DEV_HASHES=[113321696, 3584501168];
 function redeemCode(){
   const code=($('codeInput').value||'').trim();
   const tip=$('codeTip');
   if(!code){ tip.textContent='请输入兑换码'; return; }
-  const kind=CODES[code] || CODES[code.toUpperCase()];
-  if(!kind){ tip.textContent='兑换码无效'; return; }
-  if(kind==='dev'){
+  if(DEV_HASHES.indexOf(codeHash(code))<0){ tip.textContent='兑换码无效'; return; }
+  {
     S.dev=true;
     $('btnDev').classList.remove('hidden');
     tip.textContent='开发者模式已解锁';
