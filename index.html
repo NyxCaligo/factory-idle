@@ -92,9 +92,29 @@
   .toolItem.on{background:#3a1d22;border-color:#a2543f;color:#ffb3a1}
   .toolItem:active{transform:translateY(2px)}
 
+  .selBar{
+    position:absolute;left:0;right:0;z-index:20;
+    bottom:calc(58px + env(safe-area-inset-bottom));
+    background:#0d1521;border-top:2px solid #33507a;
+    display:flex;align-items:center;gap:6px;padding:8px 10px;
+  }
+  .selBar.hidden{display:none}
+  .selInfo{flex:1;font-size:11px;color:#8ff0c0}
+  .selBtn{
+    border:2px solid #33507a;background:#16202f;color:#cfe0f2;
+    font-family:inherit;font-size:10px;padding:7px 9px;
+  }
+  .selBtn.go{border-color:#4d9a5c;color:#8ff0c0}
+  .selBtn:active{transform:translateY(2px)}
+  .tile.sel2{
+    border-color:#8ff0c0;
+    box-shadow:inset 0 0 0 2px rgba(143,240,192,.5), 0 0 12px rgba(143,240,192,.4);
+    background:#12291f;
+  }
+
   .confirmBox{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center}
   .confirmBox.hidden{display:none}
-  .confirmBg{position:absolute;inset:0;background:rgba(4,8,14,.66)}
+  .confirmBg{position:absolute;inset:0;background:transparent}
   .confirmWin{position:relative;width:min(280px,84vw);background:#0d1521;border:2px solid #33507a;
               padding:14px;display:flex;flex-direction:column;gap:12px;box-shadow:0 6px 0 #060a11}
   .confirmTxt{font-size:12px;line-height:18px;color:#dbe7f4;text-align:center}
@@ -265,6 +285,9 @@
   .expandLbl b{color:#ffe9a8;font-size:11px}
   .expandLbl:active{transform:translateY(2px)}
 
+  .tile .pbar.green i{background:#3ddc97}
+  .tile .pbar.gold i{background:#f2c14e}
+
   .tile .pbar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.10)}
   .tile .pbar i{display:block;height:100%;width:0;background:var(--good)}
 
@@ -290,6 +313,7 @@
              scrollbar-width:none;overscroll-behavior:contain;
              touch-action:pan-y;-webkit-overflow-scrolling:touch}
   .ft-scroll::-webkit-scrollbar{display:none}
+  .ft-scroll > *{flex:0 0 auto}
   .ft-bar{flex:0 0 16px;position:relative;background:#0a1017;border:1px solid #2a3a52;
           touch-action:none;margin-left:4px}
   .ft-thumb{position:absolute;left:1px;right:1px;top:0;height:28px;background:#4a6b96;
@@ -301,16 +325,17 @@
   .factag .ft-row span{color:#7f93ab}
   .factag .ft-row b{color:#e8f1fb;font-weight:700}
   .factag .ft-buy{
-    display:flex;align-items:center;gap:6px;width:100%;
+    display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;width:100%;
     border:2px solid #33507a;background:#16202f;color:#dbe7f4;
-    font-family:inherit;font-size:10px;padding:6px 7px;margin-bottom:5px;text-align:left;
+    font-family:inherit;font-size:10px;padding:6px 7px;margin-bottom:0;text-align:left;
+    overflow:hidden;min-height:42px;
   }
   .factag .ft-buy:active{transform:translateY(2px)}
-  .factag .ft-buy .bn{color:#ffe9a8}
-  .factag .ft-buy .bc{margin-left:auto;color:#8fa3bd}
-  .factag .ft-buy .bt{color:#e06a7a;font-size:9px}
+  .factag .ft-buy .bn{flex:1 1 100%;color:#ffe9a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .factag .ft-buy .bc{margin-left:0;color:#8fa3bd}
+  .factag .ft-buy .bt{color:#e06a7a;font-size:9px;margin-left:auto}
   .factag .ft-buy.off{opacity:.45}
-  .factag .ft-buy .bc{display:flex;align-items:center;gap:7px;font-size:9px;margin-left:auto}
+  .factag .ft-buy .bc{display:flex;flex-wrap:wrap;align-items:center;gap:2px 8px;font-size:8px;margin-left:0;flex:1 1 auto}
   .factag .ft-buy .ci.ok{color:#6fd39a}
   .factag .ft-buy .ci.no{color:#e06a7a}
   .factag .ft-buy .bc .h{color:#8ff0c0;font-style:normal;font-weight:700}
@@ -453,6 +478,15 @@
         font-family:inherit;font-size:11px;letter-spacing:1px;padding:9px;width:100%}
   .gBtn:active{transform:translateY(2px)}
   .gTip{font-size:10px;color:#8fa3bd;text-align:center;min-height:12px}
+  .rateLegend,.rateRow{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;font-size:11px;align-items:center}
+  .rateLegend{color:#8fa3bd;border-bottom:1px solid #24374f;padding-bottom:4px}
+  .rateRow{padding:4px 0;border-bottom:1px dashed #1b2739}
+  .rateRow span:first-child{color:#cfe0f2}
+  .rateRow .pos{color:#8ff0c0}
+  .rateRow .neg{color:#e06a7a}
+  .rateRow .net{font-weight:700}
+  .rateFoot{margin-top:8px;font-size:10px;color:#8fa3bd;line-height:16px}
+
   .devGrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
   .devGrid .gBtn{font-size:10px;padding:8px 4px;letter-spacing:0}
 
@@ -498,7 +532,7 @@
 
 <section id="menu" class="screen on">
   <div class="logo">生产与建造</div>
-  <div class="sub">v1.0.1</div>
+  <div class="sub">v1.0.0</div>
   <div class="menuBtns">
     <button class="btn primary" id="btnNew">开始新游戏</button>
     <button class="btn" id="btnContinue" style="display:none">继续游戏</button>
@@ -547,6 +581,9 @@
   <div class="toolPanel hidden" id="toolPanel">
     <button class="toolItem" id="toolQuickDel">拆<small>快捷拆除</small></button>
     <button class="toolItem" id="toolQuickBuild">建<small>快速建造</small></button>
+    <button class="toolItem" id="toolManage">管<small>统一管理</small></button>
+    <button class="toolItem" id="toolClear">清<small>清空场地</small></button>
+    <button class="toolItem" id="toolRate">率<small>效率统计</small></button>
   </div>
 
   <div class="confirmBox hidden" id="confirmBox">
@@ -560,6 +597,14 @@
     </div>
   </div>
   <button class="expandBtn hidden" id="expandBtn">扩建</button>
+  <div class="selBar hidden" id="selBar">
+    <span class="selInfo" id="selInfo">已选 0</span>
+    <button class="selBtn" id="selAll">全选</button>
+    <button class="selBtn" id="selNone">清空</button>
+    <button class="selBtn" id="selCancel">取消</button>
+    <button class="selBtn go" id="selDone">完成</button>
+  </div>
+
   <div class="stage" id="stage">
     <div class="pane on" id="scenePane">
       <div class="boostTint hidden" id="boostTint"></div>
@@ -605,6 +650,18 @@
     <div class="bagMid">
       <div class="bagList" id="bagList"></div>
       <div class="bagBar" id="bagBar"><i class="bagThumb" id="bagThumb"></i></div>
+    </div>
+  </div>
+</div>
+
+<div id="rateModal" class="gModal hidden">
+  <div class="gBg" data-close="rateModal"></div>
+  <div class="gBox wide">
+    <div class="gHead"><span>效率统计（每秒）</span><button class="gX" data-close="rateModal">✕</button></div>
+    <div class="gBody">
+      <div class="rateLegend"><span>资源</span><span>产出</span><span>消耗</span><span>净值</span></div>
+      <div id="rateList"></div>
+      <div class="rateFoot" id="rateFoot"></div>
     </div>
   </div>
 </div>
@@ -690,6 +747,9 @@ const RES={
   gear:{ name:'齿轮', ch:'齿', color:'#a8b3c0',        req:'machine' },
   wire:{ name:'铜线', ch:'线', color:'#e0b06a',        req:'machine' },
   tempered:{ name:'钢化玻璃', ch:'玻', color:'#8fe0ff', req:'tempered' },
+  oil:{ name:'石油', ch:'油', color:'#4a4f57', req:'oil' },
+  plastic:{ name:'塑料', ch:'塑', color:'#e0e6ee', req:'oil' },
+  part:{ name:'机械零件', ch:'件', color:'#b8c4d4', req:'precision' },
   power:{ name:'电',   ch:'电', color:'#5ee6e6',      req:'power' },
 };
 
@@ -701,26 +761,54 @@ const BUILD={
   furnace:{ name:'熔炉',   res:null, ch:'熔', cost:{stone:30}, need:'smelt',
             smelt:true, verb:'熔炼', recipes:['glass','charcoal','brick','iron','steel','copper'] },
   ironmine:{ name:'铁矿', res:'ironOre', every:5, per:1, ch:'铁', cost:{stone:30, wood:30, brick:10}, need:'iron' },
-  coppermine:{ name:'铜矿厂', res:'copperOre', every:6, per:1, ch:'铜', cost:{brick:40, wood:30, stone:30}, need:'conduct' },
+  coppermine:{ name:'铜矿', res:'copperOre', every:6, per:1, ch:'铜', cost:{brick:40, wood:30, stone:30}, need:'conduct' },
   machine:{ name:'机械工厂', res:null, ch:'机', color:'#d9a05b', cost:{tempered:20, steel:40, iron:40, brick:40, glass:30},
-            need:'machine', smelt:true, verb:'制造', power:1, recipes:['gear','wire'] },
+            need:'machine', smelt:true, verb:'制造', power:1, recipes:['gear','wire','part'] },
   glassfactory:{ name:'钢化玻璃厂', res:null, ch:'玻', color:'#8fe0ff', cost:{steel:40, brick:40},
             need:'tempered', smelt:true, verb:'生产', power:1, recipes:['tempered'] },
   grid:{ name:'电网', res:null, ch:'网', color:'#5ee6e6', cost:{gear:50, wire:50, steel:80, brick:60},
             need:'circuit', power:1, aura:true },
-  powerplant:{ name:'发电厂', res:null, ch:'电', color:'#5ee6e6', cost:{brick:20, glass:20, steel:20}, need:'power',
+  oilwell:{ name:'石油钻井', res:'oil', every:4, per:1, ch:'油', color:'#4a4f57',
+            cost:{gear:20, wire:20, brick:30, steel:20, tempered:10}, need:'oil', power:1 },
+  chemical:{ name:'化工厂', res:null, ch:'化', color:'#d06a9a',
+            cost:{gear:30, wire:30, brick:40, steel:30, tempered:20}, need:'oil',
+            smelt:true, verb:'生产', power:2, recipes:['plastic'] },
+  diesel:{ name:'柴油发电机', res:null, ch:'柴', color:'#e0a45a',
+            cost:{plastic:30, steel:40, tempered:20, brick:40, gear:30, wire:30, part:10}, need:'precision',
+            smelt:true, verb:'发电', pick:'燃料', power:0, recipes:['p_oil'] },
+  powerplant:{ name:'火力发电厂', res:null, ch:'电', color:'#5ee6e6', cost:{brick:20, glass:20, steel:20}, need:'power',
             smelt:true, verb:'生产', recipes:['p_coal','p_char'] },
 };
-const ORDER=['sawmill','quarry','sandpit','coalmine','furnace','ironmine','coppermine','glassfactory','machine','powerplant','grid'];
-const ROWS=5;
-const MAX_LAND=3;
-function colsNow(){ return (S && S.land>=2) ? 10 : 5; }        // 1级 5列 → 2级 10列
-function rowsNow(){ return (S && S.land>=3) ? 10 : 5; }        // 3级 10行
+const ORDER=['sawmill','quarry','sandpit','coalmine','furnace','ironmine','coppermine','glassfactory','machine','powerplant','grid','oilwell','chemical','diesel'];
+const MAX_LAND=10;
+function gridSize(){
+  const l=(S&&S.land)?S.land:1;
+  if(l<=1) return { cols:5,  rows:5  };
+  if(l===2) return { cols:10, rows:5  };
+  if(l===3) return { cols:10, rows:10 };
+  if(l===4) return { cols:15, rows:10 };
+  const step=l-5;                        // 5 级之后：向右、向下交替 +5
+  const addC=5*Math.ceil(step/2);
+  const addR=5*Math.floor(step/2);
+  return { cols:15+addC, rows:15+addR };
+}
+function colsNow(){ return gridSize().cols; }
+function rowsNow(){ return gridSize().rows; }
 function expandInfo(){
-  const land=(S&&S.land)?S.land:1;
-  if(land===1) return { cols:5, rows:0, cost:1 };   // 5×5 → 10×5，+25 格
-  if(land===2) return { cols:0, rows:5, cost:3 };   // 10×5 → 10×10，+50 格
-  return null;
+  const l=(S&&S.land)?S.land:1;
+  if(l===1) return { left:0,right:5,down:0,cost:1 };
+  if(l===2) return { left:0,right:0,down:5,cost:3 };
+  if(l===3) return { left:0,right:5,down:0,cost:2 };
+  if(l===4) return { left:0,right:0,down:5,cost:3 };
+  if(l>=MAX_LAND) return null;
+  const gs=gridSize();
+  const step=l-5;                        // 5→6 向右，6→7 向下，依此类推
+  if(step%2===0){
+    const add=5*gs.rows;                 // 加一列 5 格宽
+    return { left:0,right:5,down:0,cost:Math.ceil(add/25) };
+  }
+  const add=5*gs.cols;                   // 加一行 5 格高
+  return { left:0,right:0,down:5,cost:Math.ceil(add/25) };
 }
 
 /* ===================== 状态 ===================== */
@@ -729,7 +817,7 @@ function freshState(){
   return {
     v:6,
     res:{wood:0,stone:0,sand:0,coal:0,glass:0,charcoal:0,brick:0,ironOre:0,iron:0,steel:0,
-         copperOre:0,copper:0,gear:0,wire:0,tempered:0,power:0},
+         copperOre:0,copper:0,gear:0,wire:0,tempered:0,oil:0,plastic:0,part:0,power:0},
     fac:{ 'sawmill@0,0':{ type:'sawmill', col:0, row:0, t:0 } },   // 初始一座锯木厂
     land:1, lv:0, xp:0, tp:0, talents:{},
     boost:0, dailyBoost:0, boostOn:false, dailyDay:'',   // 存储加速 / 今日加速 / 开关 / 日期
@@ -742,7 +830,7 @@ function migrateSave(d){
   if(!d) return null;
   try{
     d.res=Object.assign({wood:0,stone:0,sand:0,coal:0,glass:0,charcoal:0,brick:0,ironOre:0,iron:0,steel:0,
-      copperOre:0,copper:0,gear:0,wire:0,tempered:0,power:0}, d.res||{});
+      copperOre:0,copper:0,gear:0,wire:0,tempered:0,oil:0,plastic:0,part:0,power:0}, d.res||{});
     d.fac=d.fac||{};
     // 兼容旧版（v3：固定三座工厂）
     if(d.v===3){
@@ -804,16 +892,18 @@ function load(){
 
 /* ===================== 天赋 / 等级 ===================== */
 const TALENTS=[
-  { id:'coal',  name:'煤矿开采', desc:'解锁可建造的「煤矿」', icon:'煤', cost:1, req:null },
+  { id:'coal',  name:'燃料', desc:'解锁「煤矿」：产出煤炭', icon:'煤', cost:1, req:null },
   { id:'smelt', name:'熔炼',     desc:'解锁「熔炉」：2 沙子 + 1 煤炭 → 1 玻璃', icon:'熔', cost:1, req:'coal' },
-  { id:'sand',  name:'沙场开采', desc:'解锁可建造的「沙场」', icon:'沙', cost:1, req:'smelt' },
+  { id:'sand',  name:'玻璃', desc:'解锁「沙场」：产出沙子', icon:'沙', cost:1, req:'smelt' },
   { id:'build', name:'建筑',     desc:'解锁熔炉配方「砖块」：1沙+2石+1煤 → 1砖', icon:'砖', cost:1, req:'sand' },
   { id:'iron',  name:'炼铁',     desc:'解锁「铁矿」与熔炉配方「铁锭/钢铁」', icon:'铁', cost:1, req:'build' },
-  { id:'power',    name:'发电',   desc:'解锁「发电厂」与熔炉配方「木炭」', icon:'电', cost:2, req:'iron' },
+  { id:'power',    name:'发电',   desc:'解锁「火力发电厂」与熔炉配方「木炭」', icon:'电', cost:2, req:'iron' },
   { id:'conduct',  name:'传导',   desc:'解锁「铜矿厂」与配方「铜锭」', icon:'铜', cost:2, req:'power' },
   { id:'tempered', name:'钢化',   desc:'解锁「钢化玻璃厂」', icon:'玻', cost:2, req:'conduct' },
   { id:'machine',  name:'机械',   desc:'解锁「机械工厂」：齿轮 / 铜线', icon:'齿', cost:3, req:'tempered' },
-  { id:'circuit',  name:'电路',   desc:'解锁「电网」：周围发电厂 25% 双倍电', icon:'网', cost:3, req:'machine' },
+  { id:'circuit',  name:'电路',   desc:'解锁「电网」：25% 概率翻倍电，4 个必定', icon:'网', cost:3, req:'machine' },
+  { id:'oil',      name:'石油',   desc:'解锁「石油钻井」「化工厂」与配方「塑料」', icon:'油', cost:3, req:'circuit' },
+  { id:'precision',name:'精密',   desc:'解锁「柴油发电机」与配方「机械零件」', icon:'精', cost:3, req:'oil' },
   { id:'t2',   name:'待开发',   desc:'后续版本开放',        icon:'?', cost:1, locked:true },
   { id:'t3',   name:'待开发',   desc:'后续版本开放',        icon:'?', cost:1, locked:true },
 ];
@@ -860,8 +950,9 @@ function fitGrid(){
   const avail=arena.clientWidth - 20;
   const gap=4;
   const ei=expandInfo();
-  const C=colsNow() + (ei?ei.cols:0);
-  const R=rowsNow() + (ei?ei.rows:0);
+  const gs=gridSize();
+  const C=gs.cols + (ei ? (ei.left||0)+(ei.right||0) : 0);
+  const R=gs.rows + (ei ? (ei.down||0) : 0);
   let size=Math.floor((avail - gap*(C-1))/C);
   const maxByH=Math.floor((arena.clientHeight - 86 - gap*(R-1))/R);
   size=Math.max(42, Math.min(size, 92, maxByH));
@@ -875,9 +966,17 @@ window.addEventListener('resize', ()=>{ fitGrid(); });
 
 /* ===================== 缩放 ===================== */
 let zs=1, tx=0, ty=0;
-const ZMIN=0.6, ZMAX=2.2;
+const ZMIN=0.25, ZMAX=2.2;
 function applyZoom(){ const f=$('field'); if(f) f.style.transform='translate('+tx+'px,'+ty+'px) scale('+zs+')'; }
-function resetZoom(){ zs=1; tx=0; ty=0; applyZoom(); }
+function resetZoom(){
+  const a=$('arena'), f=$('field');
+  if(a && f && f.offsetWidth>0){
+    const sx=(a.clientWidth-16)/f.offsetWidth;
+    const sy=(a.clientHeight-96)/f.offsetHeight;
+    zs=Math.max(ZMIN, Math.min(1, sx, sy));
+  } else zs=1;
+  tx=0; ty=0; applyZoom();
+}
 function clampPan(){
   const f=$('field'), a=$('arena'); if(!f||!a) return;
   const w=f.offsetWidth*zs, h=f.offsetHeight*zs;
@@ -891,6 +990,7 @@ function clampPan(){
   const inPanel=(t)=> !!(t && t.closest && t.closest('.factag,.smelt,.boostPanel,.toolPanel,.bagModal,.bInfo,.confirmBox'));
   a.addEventListener('touchstart',(e)=>{
     if(!e.touches) return;
+    if(selMode) return;                      // 选择模式：不拖动场地
     if(inPanel(e.target)) return;            // 在弹窗/面板里操作时不拖动场地
     if(e.touches.length===2){
       mode=2;
@@ -902,6 +1002,7 @@ function clampPan(){
     }
   },{passive:false});
   a.addEventListener('touchmove',(e)=>{
+    if(selMode) return;
     if(inPanel(e.target)) return;
     if(mode===2 && e.touches.length===2){
       const [p1,p2]=e.touches;
@@ -966,23 +1067,21 @@ function showInfo(tileEl, key){
       '<div class="ft-row"><span>状态</span><b class="lv-state">'+(f.active?'<span style="color:#8ff0c0">通电中</span>':'<span style="color:#e06a7a">断电</span>')+'</b></div>'+
       '<div class="ft-row"><span>运行</span><b class="lv-run">'+fmtClock(runT)+'</b></div>'+
       '<div class="ft-row"><span>累计增益</span><b class="lv-bonus">+' + bonus + ' 电</b></div>'+
-      '<div class="ft-row"><span>作用</span><b>周围 8 格电厂每个 +25% 额外电</b></div>'+
-      '<div class="ft-row"><span>叠加</span><b>4 个电网 = 必定 +1</b></div>'+
+      '<div class="ft-row"><span>作用</span><b>每个电网 25% 概率产出翻倍</b></div>'+
+      '<div class="ft-row"><span>叠加</span><b>4 个电网 = 必定翻倍</b></div>'+
       powerRow+
       '<div class="ft-row"><span>范围</span><b>周围 8 格</b></div>';
   } else if(b.smelt){
     body = recipesFor(b).map(rec=>
         '<div class="ft-sub">'+rec.name+'</div>'+
         '<div class="ft-row"><span>产出</span><b>'+RES[rec.out].name+' ×'+rec.per+'</b></div>'+
-        '<div class="ft-row"><span>周期</span><b>'+rec.secs+' 秒</b></div>'+
-        '<div class="ft-row"><span>效率</span><b>'+(rec.per/rec.secs).toFixed(2)+' /秒</b></div>'
+        '<div class="ft-row"><span>周期</span><b>'+rec.secs+' 秒</b></div>'
       ).join('')+
       powerRow;
   } else {
     body =
       '<div class="ft-row"><span>产出</span><b>'+r.name+' ×'+b.per+'</b></div>'+
       '<div class="ft-row"><span>周期</span><b>'+b.every+' 秒</b></div>'+
-      '<div class="ft-row"><span>效率</span><b>'+(b.per/b.every).toFixed(2)+' /秒</b></div>'+
       powerRow;
   }
 
@@ -1149,6 +1248,13 @@ function bindTilePress(tileEl, kind, arg){
   };
 
   const start=(e)=>{
+    if(selMode){
+      const p=e.touches?e.touches[0]:e;
+      const c = kind==='fac' ? S.fac[arg].col : arg.col;
+      const r = kind==='fac' ? S.fac[arg].row : arg.row;
+      beginSelDrag(p.clientX,p.clientY,c,r);
+      return;
+    }
     if(kind==='fac' && quickDel) return;
     t0=Date.now(); fired=false;
     const p=e.touches?e.touches[0]:e;
@@ -1182,6 +1288,10 @@ function bindTilePress(tileEl, kind, arg){
 
   tileEl.addEventListener('click',(e)=>{
     e.stopPropagation();
+    if(kind==='fac' && selMode){
+      if(selDragged){ selDragged=false; return; }
+      toggleSel(arg); return;
+    }
     if(kind==='fac' && quickDel){ demolishFac(arg); return; }
 
     if(kind==='fac'){
@@ -1197,6 +1307,7 @@ function bindTilePress(tileEl, kind, arg){
     }
 
     // 空地：快速建造模式 or 普通建造列表
+    if(selMode) return;
     if(Date.now()-lastShowAt<200) return;
     clearTimeout(pending); pending=null;
     fired=true;
@@ -1207,33 +1318,56 @@ function bindTilePress(tileEl, kind, arg){
 
 /* ===================== 场地扩建 ===================== */
 function canExpand(){ return S && (S.land||1) < MAX_LAND; }
+function expandAmount(ei){
+  const gs=gridSize();
+  return (ei.left+ei.right)*gs.rows + ei.down*gs.cols;
+}
+function expandDir(ei){
+  if(ei.left) return '向左';
+  if(ei.right) return '向右';
+  return '向下';
+}
 function doExpand(){
   if(!canExpand()) return;
   const ei=expandInfo(); if(!ei) return;
   if(S.tp < ei.cost){ toast('天赋点不足（需要 '+ei.cost+' 点）'); return; }
-  S.tp-=ei.cost; S.land=(S.land||1)+1;
+  S.tp-=ei.cost;
+  if(ei.left){
+    const nf={};
+    for(const k in S.fac){
+      const f=S.fac[k];
+      f.col+=ei.left;
+      nf[f.type+'@'+f.col+','+f.row]=f;
+    }
+    S.fac=nf;
+  }
+  S.land=(S.land||1)+1;
   buildScene(); fitGrid(); resetZoom(); renderXp(); save();
-  toast('场地扩建为 '+colsNow()+'×5');
+  toast('场地扩建为 '+colsNow()+'×'+rowsNow()+'（'+colsNow()*rowsNow()+' 格）');
 }
 function syncExpandBtn(){
   const b=$('expandBtn'); if(!b) return;
   const ei=expandInfo();
   b.classList.toggle('hidden', !ei);
-  if(ei){ b.innerHTML='扩建 +'+(ei.cols?25:50)+'<small>'+ei.cost+' 天赋点</small>'; }
+  if(ei){ b.innerHTML='扩建 +'+expandAmount(ei)+'<small>'+ei.cost+' 天赋点</small>'; }
 }
 
 /* ===================== 场景渲染 ===================== */
 function buildScene(){
   const scene=$('scene'); scene.innerHTML='';
+  const fld=$('field');
+  if(fld) fld.querySelectorAll('.expandLbl').forEach(el=>el.remove());
   const occ={};
   for(const k in S.fac){ const f=S.fac[k]; occ[f.col+','+f.row]=k; }
 
-  const C=colsNow(), R=rowsNow(), ei=expandInfo();
-  const totalC=C+(ei?ei.cols:0);
-  const totalR=R+(ei?ei.rows:0);
+  const gs=gridSize(), C=gs.cols, R=gs.rows, ei=expandInfo();
+  const left=ei?ei.left:0, right=ei?ei.right:0, down=ei?ei.down:0;
+  const totalC=C+left+right;
+  const totalR=R+down;
   let lockFirst=null, lockLast=null;
-  for(let r=0;r<totalR;r++) for(let c=0;c<totalC;c++){
-    if(ei && (c>=C || r>=R)){
+  for(let r=0;r<totalR;r++) for(let cc=0;cc<totalC;cc++){
+    const c=cc-left;                     // 真实列号（左预览为负）
+    if(ei && (c<0 || c>=C || r>=R)){
       const lt=document.createElement('div');
       lt.className='tile lock';
       if(!lockFirst) lockFirst=lt;
@@ -1257,7 +1391,8 @@ function buildScene(){
       nm.className='nm'+(b.name.length>=5?' xlong':(b.name.length>=4?' long':''));
       nm.textContent=b.name;
       tile.appendChild(nm);
-      const bar=document.createElement('div'); bar.className='pbar';
+      const bar=document.createElement('div');
+      bar.className='pbar ' + (b.smelt ? 'gold' : 'green');
       const fill=document.createElement('i'); fill.id='bar-'+key; bar.appendChild(fill);
       tile.appendChild(bar);
       bindTilePress(tile,'fac',key);
@@ -1268,29 +1403,6 @@ function buildScene(){
     scene.appendChild(tile);
   }
 
-  // 扩建解锁标签（贴在待扩建区中央）
-  if(ei && lockFirst && lockLast){
-    const old=$('field') && $('field').querySelector('.expandLbl');
-    if(old) old.remove();
-    const lbl=document.createElement('div');
-    lbl.className='expandLbl';
-    const add = ei.cols? '+25 格（向右）' : '+50 格（向下）';
-    lbl.innerHTML='<b>扩建 '+add+'</b><span>'+ei.cost+' 天赋点 解锁</span>';
-    lbl.addEventListener('click',(e)=>{ e.stopPropagation(); doExpand(); });
-    $('field').appendChild(lbl);
-    requestAnimationFrame(()=>{
-      const fr=$('field').getBoundingClientRect();
-      const a=lockFirst.getBoundingClientRect(), b=lockLast.getBoundingClientRect();
-      const left=(a.left-fr.left), top=(a.top-fr.top);
-      const w=(b.right-a.left), h=(b.bottom-a.top);
-      lbl.style.left=left+'px'; lbl.style.top=top+'px';
-      lbl.style.width=w+'px'; lbl.style.height=h+'px';
-      lbl.style.justifyContent='center';
-    });
-  } else {
-    const old=$('field') && $('field').querySelector('.expandLbl');
-    if(old) old.remove();
-  }
   syncExpandBtn();
 }
 
@@ -1326,6 +1438,9 @@ const RECIPES=[
   { id:'wire',     name:'铜线',     need:{copper:2},       out:'wire',     per:1, secs:7 },
   { id:'tempered', name:'钢化玻璃', need:{glass:2, coal:1},  out:'tempered', per:1, secs:6 },
   { id:'p_char',   name:'木炭发电', need:{charcoal:1},     out:'power',    per:1, secs:5 },
+  { id:'plastic',  name:'塑料',     need:{oil:2},          out:'plastic',  per:1, secs:8, talent:'oil' },
+  { id:'part',     name:'机械零件', need:{wire:1, gear:1, plastic:1}, out:'part', per:1, secs:10, talent:'precision' },
+  { id:'p_oil',    name:'燃油发电', need:{oil:1},          out:'power',    per:10, secs:4 },
 ];
 const RECIPE_BY_ID={}; RECIPES.forEach(r=>RECIPE_BY_ID[r.id]=r);
 let curRecipe=RECIPES[0];
@@ -1346,6 +1461,211 @@ function furnacePower(){
   const b=f?BUILD[f.type]:null;
   return (b&&b.power)?b.power:0;
 }
+
+/* ===================== 统一管理：选择建筑 ===================== */
+let selMode=false, selKeys=new Set(), batchKeys=null;
+
+function smeltKeys(){ return Object.keys(S.fac).filter(k=>BUILD[S.fac[k].type] && BUILD[S.fac[k].type].smelt); }
+function renderSelBar(){
+  const bar=$('selBar'); if(!bar) return;
+  bar.classList.toggle('hidden', !selMode);
+  const info=$('selInfo'); if(info) info.textContent='已选 '+selKeys.size;
+  document.querySelectorAll('.tile.sel2').forEach(t=>t.classList.remove('sel2'));
+  if(selMode){
+    for(const k of selKeys){
+      const t=$('scene') && $('scene').querySelector('.tile[data-k="'+k+'"]');
+      if(t) t.classList.add('sel2');
+    }
+  }
+}
+function setSelMode(on, keepSel){
+  selMode=!!on;
+  if(on){ selKeys.clear(); batchKeys=null; }
+  if(!on){
+    if(!keepSel) selKeys.clear();
+    batchKeys=null; hidePop();
+  }
+  renderSelBar();
+  if(on) toast('选择要管理的建筑（可全选）');
+}
+function toggleSel(key){
+  if(selKeys.has(key)) selKeys.delete(key); else selKeys.add(key);
+  renderSelBar();
+}
+function selAll(){
+  selKeys=new Set(smeltKeys());
+  renderSelBar();
+}
+function selNone(){ selKeys.clear(); renderSelBar(); }
+
+/* 完成选择 → 列出可管理的建筑类型 */
+function showManageTypes(){
+  const pool=[...selKeys];
+  if(!pool.length){ toast('还没有选择建筑'); return; }
+  const groups={};
+  for(const k of pool){
+    const f=S.fac[k]; if(!f) continue;
+    const b=BUILD[f.type]; if(!b || !b.smelt) continue;
+    groups[f.type]=(groups[f.type]||0)+1;
+  }
+  const types=Object.keys(groups);
+  if(!types.length){ toast('所选建筑都不支持选择配方'); return; }
+
+  // 收起选择状态，避免下次进入还残留
+  selKeys.clear();
+  document.querySelectorAll('.tile.sel2').forEach(t=>t.classList.remove('sel2'));
+  renderSelBar();
+
+  hidePop();
+  const box=document.createElement('div');
+  box.className='factag picker';
+  let html='<div class="ft-title">选择要管理的建筑</div>';
+  for(const t of types){
+    const b=BUILD[t];
+    html+='<button class="ft-buy" data-type="'+t+'">'+
+            '<span class="bn">'+b.name+'</span>'+
+            '<span class="bc">'+groups[t]+' 座</span>'+
+          '</button>';
+  }
+  box.innerHTML=html;
+  box.querySelectorAll('.ft-buy').forEach(btn=>{
+    btn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      const type=btn.dataset.type;
+      batchKeys=pool.filter(k=>S.fac[k] && S.fac[k].type===type);
+      hidePop();
+      showManageRecipes(type);
+    });
+  });
+  $('arena').appendChild(box);
+  pop=box; lastShowAt=Date.now();
+  requestAnimationFrame(()=>box.classList.add('on'));
+  const ar=$('arena').getBoundingClientRect();
+  box.style.left=Math.max(6,(ar.width-(box.offsetWidth||240))/2)+'px';
+  box.style.top=Math.max(6,(ar.height-(box.offsetHeight||200))/2)+'px';
+}
+
+/* 选配方 */
+function showManageRecipes(type){
+  const b=BUILD[type];
+  hidePop();
+  const box=document.createElement('div');
+  box.className='factag picker';
+  let html='<div class="ft-title">'+b.name+' × '+batchKeys.length+' 座</div>';
+  for(const rec of recipesFor(b)){
+    html+='<button class="ft-buy" data-rec="'+rec.id+'">'+
+            '<span class="bn">'+rec.name+'</span>'+
+            '<span class="bc">'+recipeText(rec)+'</span>'+
+          '</button>';
+  }
+  box.innerHTML=html;
+  box.querySelectorAll('.ft-buy').forEach(btn=>{
+    btn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      curRecipe=RECIPE_BY_ID[btn.dataset.rec];
+      hidePop();
+      const firstKey=batchKeys[0];
+      const tile=$('scene') && $('scene').querySelector('.tile[data-k="'+firstKey+'"]');
+      openFurnace(tile, firstKey);
+      const t=$('smeltTitle'); if(t) t.textContent=b.name+' × '+batchKeys.length+' 座';
+    });
+  });
+  $('arena').appendChild(box);
+  pop=box; lastShowAt=Date.now();
+  requestAnimationFrame(()=>box.classList.add('on'));
+  const ar=$('arena').getBoundingClientRect();
+  box.style.left=Math.max(6,(ar.width-(box.offsetWidth||240))/2)+'px';
+  box.style.top=Math.max(6,(ar.height-(box.offsetHeight||200))/2)+'px';
+}
+
+/* ---- 框选：从起点拖到终点，矩形内建筑全选 ---- */
+let selDrag=null, selDragged=false;
+function tileAt(x,y){
+  const el=document.elementFromPoint?document.elementFromPoint(x,y):null;
+  return el&&el.closest?el.closest('.tile'):null;
+}
+function beginSelDrag(x,y,col,row){
+  selDrag={x0:x,y0:y,c0:col,r0:row,c1:col,r1:row,drag:false};
+  selDragged=false;
+}
+function updateSelDrag(x,y){
+  if(!selDrag) return;
+  if(Math.hypot(x-selDrag.x0,y-selDrag.y0) > 8) selDrag.drag=true;
+  if(!selDrag.drag) return;
+  const t=tileAt(x,y);
+  if(t && t.dataset.c!=null){
+    selDrag.c1=+t.dataset.c;
+    selDrag.r1=+t.dataset.r;
+    previewRect();
+  }
+}
+function rectRange(){
+  if(!selDrag) return null;
+  const c0=Math.min(selDrag.c0,selDrag.c1), c1=Math.max(selDrag.c0,selDrag.c1);
+  const r0=Math.min(selDrag.r0,selDrag.r1), r1=Math.max(selDrag.r0,selDrag.r1);
+  return {c0,c1,r0,r1};
+}
+function previewRect(){
+  document.querySelectorAll('.tile.sel2').forEach(t=>t.classList.remove('sel2'));
+  const R=rectRange(); if(!R) return;
+  for(const k in S.fac){
+    const f=S.fac[k];
+    if(f.col>=R.c0&&f.col<=R.c1&&f.row>=R.r0&&f.row<=R.r1){
+      const t=$('scene') && $('scene').querySelector('.tile[data-k="'+k+'"]');
+      if(t) t.classList.add('sel2');
+    }
+  }
+}
+function finishSelDrag(){
+  if(!selDrag) return;
+  const wasDrag=selDrag.drag;
+  const R=rectRange();
+  selDrag=null;
+  if(wasDrag && R){
+    selKeys=new Set();
+    for(const k in S.fac){
+      const f=S.fac[k], b=BUILD[f.type];
+      if(!b||!b.smelt) continue;
+      if(f.col>=R.c0&&f.col<=R.c1&&f.row>=R.r0&&f.row<=R.r1) selKeys.add(k);
+    }
+    selDragged=true;
+    renderSelBar();
+    toast('框选了 '+selKeys.size+' 座建筑');
+  }
+}
+document.addEventListener('touchmove',(e)=>{
+  if(!selMode||!selDrag) return;
+  const p=e.touches&&e.touches[0]; if(!p) return;
+  updateSelDrag(p.clientX,p.clientY);
+},{passive:true});
+document.addEventListener('touchend',()=>{ if(selMode) finishSelDrag(); });
+document.addEventListener('mousemove',(e)=>{ if(selMode&&selDrag) updateSelDrag(e.clientX,e.clientY); });
+document.addEventListener('mouseup',()=>{ if(selMode) finishSelDrag(); });
+
+$('toolManage').onclick=()=>{ openTool(false); if(selMode){ setSelMode(false); return; } setSelMode(true); };
+$('selAll').onclick=selAll;
+$('selNone').onclick=selNone;
+$('selCancel').onclick=()=>{ setSelMode(false); };
+$('selDone').onclick=()=>{ setSelMode(false, true); showManageTypes(); };
+$('toolClear').onclick=()=>{
+  openTool(false);
+  askConfirm('确认清除场上全部建筑吗？\n会按造价返还一半材料。', ()=>{
+    const back={};
+    for(const k in S.fac){
+      const f=S.fac[k], b=BUILD[f.type]; if(!b) continue;
+      for(const r in (b.cost||{})){
+        const n=Math.floor(b.cost[r]/2);
+        if(n>0) back[r]=(back[r]||0)+n;
+      }
+    }
+    S.fac={};
+    for(const r in back) S.res[r]=(S.res[r]||0)+back[r];
+    const txt=Object.keys(back).map(r=>RES[r].name+' +'+back[r]).join(' ');
+    buildScene(); renderTop(); save();
+    toast('已清空场地'+(txt?('　返还 '+txt):''));
+  });
+};
+
 
 /* ===================== 快速建造 ===================== */
 function buildAt(col,row,type){
@@ -1480,21 +1800,29 @@ function closeFurnace(){
   $('smeltWrap').classList.add('hidden');
 }
 function startFurnace(n, infinite){
-  const f=S.fac[furnaceKey]; if(!f) return;
+  const isBatch = !!(batchKeys && batchKeys.length);
+  const keys = isBatch ? batchKeys.slice() : [furnaceKey];
+  const first = S.fac[keys[0]]; if(!first) return;
   if(!infinite && !(n>0)) n=1;
   if(infinite && !canSmelt(curRecipe,1)){ toast('材料不够'); return; }
-  
-  f.recipe=curRecipe.id;
-  f.infinite=!!infinite;
-  f.queue=infinite?0:n;
-  f.t=0;
-  save(); renderFurnace();
-  closeFurnace();                       // 选完数量直接关闭
-  {
-    const nm=(BUILD[f.type]&&BUILD[f.type].name)||'设备';
-    const verb=(BUILD[f.type]&&BUILD[f.type].verb)||'工作';
-    toast(infinite?(nm+'开始持续'+verb):(nm+'开始'+verb+' '+n+' 个'));
+
+  for(const k of keys){
+    const f=S.fac[k]; if(!f) continue;
+    f.recipe=curRecipe.id;
+    f.infinite=!!infinite;
+    f.queue=infinite?0:n;
+    f.t=0;
   }
+  save(); renderFurnace();
+  closeFurnace();
+  {
+    const nm=(BUILD[first.type]&&BUILD[first.type].name)||'设备';
+    const verb=(BUILD[first.type]&&BUILD[first.type].verb)||'工作';
+    const cnt=keys.length;
+    const tail = isBatch ? (' × '+cnt+' 座') : '';
+    toast(infinite?(nm+'开始持续'+verb+tail):(nm+'开始'+verb+' '+n+' 个'+tail));
+  }
+  if(isBatch){ batchKeys=null; setSelMode(false); }
 }
 $('smeltClose').onclick=closeFurnace;
 $('smeltOne').onclick=()=>{
@@ -1544,12 +1872,11 @@ function furnaceTick(f, b, dt){
     if(rec.out==='power'){
       const n=gridCount(f.col,f.row);
       if(n>0){
-        const p=0.25*n;              // 每个相邻且通电的电网 +25%
-        let extra=Math.floor(p);     // 满 100% 必定触发
-        if(Math.random() < (p-extra)) extra++;
-        if(extra>0){
-          gain += rec.per*extra;
-          const share=rec.per*extra/n;
+        // 电网：每个相邻电网 25% 概率让本次产出翻倍，4 个必定
+        const p=Math.min(1, 0.25*n);
+        if(Math.random() < p){
+          gain = rec.per*2;
+          const share=rec.per/n;
           for(const gk of gridList(f.col,f.row)) S.fac[gk].bonus=(S.fac[gk].bonus||0)+share;
         }
       }
@@ -1597,6 +1924,13 @@ function tickGrids(dt){
 
 /* ===================== 顶栏/背包 ===================== */
 function renderTop(){ renderBagIfOpen(); }
+function fmtBag(n){
+  n=Number(n)||0;
+  if(n<1000) return String(Math.floor(n));
+  if(n<1e6) return (n/1000).toFixed(3)+'k';
+  if(n<1e9) return (n/1e6).toFixed(3)+'m';
+  return (n/1e9).toFixed(3)+'b';
+}
 function renderBag(){
   const box=$('bagList'); if(!box) return;
   box.innerHTML='';
@@ -1607,7 +1941,7 @@ function renderBag(){
     const row=document.createElement('div'); row.className='bagrow';
     const dot=document.createElement('span'); dot.className='dot'; dot.style.background=RES[k].color;
     const n=document.createElement('span'); n.className='n'; n.textContent=RES[k].name;
-    const num=document.createElement('span'); num.className='num'; num.textContent=fmt(S.res[k]); num.style.color=RES[k].color;
+    const num=document.createElement('span'); num.className='num'; num.textContent=fmtBag(S.res[k]); num.style.color=RES[k].color;
     row.appendChild(dot); row.appendChild(n); row.appendChild(num);
     box.appendChild(row);
   }
@@ -1742,6 +2076,58 @@ function redeemCode(){
   }
 }
 
+/* ===================== 效率统计 ===================== */
+function computeRates(){
+  const prod={}, cons={};
+  const add=(o,r,v)=>{ o[r]=(o[r]||0)+v; };
+  let xp=0, powerProd=0, powerUse=0;
+  for(const key in S.fac){
+    const f=S.fac[key], b=BUILD[f.type];
+    if(!b) continue;
+    if(b.res && !b.smelt){
+      const rate=b.per/b.every;
+      add(prod,b.res,rate);
+      xp+=rate;
+      if(b.power) powerUse+=b.power;
+    }
+    if(b.smelt && f.recipe){
+      const rec=RECIPE_BY_ID[f.recipe]; if(!rec) continue;
+      const rate=rec.per/rec.secs;
+      add(prod,rec.out,rate);
+      xp+=rate;
+      for(const r in rec.need) add(cons,r,rec.need[r]/rec.secs);
+      if(b.power) powerUse+=b.power;
+    }
+    if(b.aura){ powerUse+=b.power||0; }
+  }
+  powerProd+=prod.power||0; delete prod.power; if(cons.power) delete cons.power;
+  return {prod,cons,powerProd,powerUse,xp};
+}
+function fmtRate(v){ return (Math.round(v*100)/100).toFixed(2); }
+function renderRates(){
+  const box=$('rateList'), foot=$('rateFoot'); if(!box) return;
+  const {prod,cons,powerProd,powerUse,xp}=computeRates();
+  let html='';
+  for(const r in RES){
+    const p=prod[r]||0, c=cons[r]||0, n=p-c;
+    if(p===0 && c===0 && (S.res[r]||0)===0) continue;
+    const cPos = p>0 ? '#8ff0c0' : '#cfe0f2';
+    const cNeg = c>0 ? '#e06a7a' : '#cfe0f2';
+    const cNet = n>0 ? '#8ff0c0' : (n<0 ? '#e06a7a' : '#cfe0f2');
+    html+='<div class="rateRow"><span>'+RES[r].name+'</span>'+
+      '<span style="color:'+cPos+'">+'+fmtRate(p)+'</span>'+
+      '<span style="color:'+cNeg+'">-'+fmtRate(c)+'</span>'+
+      '<span class="net" style="color:'+cNet+'">'+(n>0?'+':'')+fmtRate(n)+'</span></div>';
+  }
+  box.innerHTML=html||'<div class="rateRow"><span>暂无生产</span><span></span><span></span><span></span></div>';
+  const netPower=powerProd-powerUse;
+  const pc=(netPower>0?'#8ff0c0':(netPower<0?'#e06a7a':'#cfe0f2'));
+  foot.innerHTML='电力：+'+fmtRate(powerProd)+' / -'+fmtRate(powerUse)+
+    '　净值 <b style="color:'+pc+'">'+(netPower>0?'+':'')+fmtRate(netPower)+'</b><br>'+
+    '经验：约 '+fmtRate(xp)+' /秒（每个产出 +1）';
+}
+$('toolRate').onclick=()=>{ openTool(false); renderRates(); openModal('rateModal'); };
+
 /* ===================== 开发者模式 ===================== */
 function devAction(kind){
   if(!S) return;
@@ -1808,6 +2194,11 @@ function tick(dt){
     if(b.aura) continue;                  // 电网已在上面结算
     if(b.smelt){ if(furnaceTick(f,b,pdt)) changed=true; continue; }
     if(!b.every || !b.res) continue;
+    if(b.power){
+      const need=b.power*pdt;
+      if((S.res.power||0) < need) continue;   // 电力不足，暂停生产
+      S.res.power-=need;
+    }
     f.t+=pdt;
     if(f.t>=b.every){
       f.t-=b.every;
